@@ -15,7 +15,7 @@ var retry__default = /*#__PURE__*/_interopDefaultLegacy(retry);
 var PixelBin__default = /*#__PURE__*/_interopDefaultLegacy(PixelBin);
 
 function _extends() {
-  _extends = Object.assign || function (target) {
+  _extends = Object.assign ? Object.assign.bind() : function (target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
 
@@ -28,7 +28,6 @@ function _extends() {
 
     return target;
   };
-
   return _extends.apply(this, arguments);
 }
 
@@ -138,14 +137,22 @@ const PixelBinImage = ({
 
       if (imgRef.current) URL.revokeObjectURL(imgRef.current.src);
     };
-  }, [url, urlObj]);
+  }, [url, urlObj]); // for SSR
+
+  if (typeof window === "undefined") {
+    return /*#__PURE__*/React__default["default"].createElement("img", _extends({
+      src: url,
+      "data-testid": "pixelbin-image",
+      ref: imgRef,
+      onLoad: onLoad,
+      onError: onError
+    }, imgProps));
+  }
 
   if (isLoading && LoaderComponent) {
     return /*#__PURE__*/React__default["default"].createElement(LoaderComponent, null);
   } else if (isSuccess) {
     return /*#__PURE__*/React__default["default"].createElement("img", _extends({
-      // For SSR
-      src: typeof window === "undefined" ? url : "",
       "data-testid": "pixelbin-image",
       ref: imgRef,
       onLoad: onLoad,

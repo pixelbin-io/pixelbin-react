@@ -1,0 +1,17 @@
+{
+    "include": ["./dist/esm/"],
+    "compilerOptions": {
+        "target": "es6",
+        "module": "ES2020",
+        "allowJs": true,
+        "noEmit": false,
+        "declaration": true,
+        "emitDeclarationOnly": true,
+        "rootDir": "./dist",
+        "skipLibCheck": true,
+        "esModuleInterop": true,
+        "moduleResolution": "node",
+        "allowSyntheticDefaultImports": true,
+        "forceConsistentCasingInFileNames": true
+    }
+}
