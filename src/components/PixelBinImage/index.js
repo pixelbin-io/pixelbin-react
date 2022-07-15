@@ -109,13 +109,25 @@ const PixelBinImage = ({
         };
     }, [url, urlObj]);
 
+    // for SSR
+    if (typeof window === "undefined") {
+        return (
+            <img
+                src={url}
+                data-testid="pixelbin-image"
+                ref={imgRef}
+                onLoad={onLoad}
+                onError={onError}
+                {...imgProps}
+            />
+        );
+    }
+
     if (isLoading && LoaderComponent) {
         return <LoaderComponent />;
     } else if (isSuccess) {
         return (
             <img
-                // For SSR
-                src={typeof window === "undefined" ? url : ""}
                 data-testid="pixelbin-image"
                 ref={imgRef}
                 onLoad={onLoad}
