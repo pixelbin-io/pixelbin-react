@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import retry from "async-retry";
-import PixelBin from "@pixelbin/core";
+import PixelBin from "@pixelbin/core"
 
 import { PDKIllegalArgumentError } from "../../errors/PixelBinErrors.js";
 
@@ -39,6 +39,7 @@ export const pollTransformedImage = (url, cancelToken, retryOpts) => {
     );
 };
 
+
 export default function PixelBinDownloadButton({
     children,
     url,
@@ -54,7 +55,7 @@ export default function PixelBinDownloadButton({
 
     useEffect(() => {
         return () => setIsUnmounted(true);
-    }, []);
+    }, [])
 
     const downloadImage = (e) => {
         e.stopPropagation();
@@ -63,7 +64,6 @@ export default function PixelBinDownloadButton({
 
         try{
             url = urlObj ? PixelBin.utils.objToUrl(urlObj) : url;
-            e.target.setAttribute("data-url", url);
         } catch(err) {
             return onError(err);
         }
@@ -78,17 +78,14 @@ export default function PixelBinDownloadButton({
         setIsUnmounted(false);
         onDownloadStart();
 
-        url = new URL(url);
-        url.searchParams.set("download", true);
-
-        pollTransformedImage(url.toString(), source.token, { ...DEFAULT_RETRY_OPTS, ...retryOpts })
+        pollTransformedImage(`${url}?download=true`, source.token, { ...DEFAULT_RETRY_OPTS, ...retryOpts })
             .then(() => {
                 if (isUnmounted) return;
 
                 onDownloadFinish();
 
                 const link = document.createElement("a");
-                link.href = url.toString();
+                link.href = `${url}?download=true`;
                 link.download = "pixelbin-transformed";
                 link.click();
             })

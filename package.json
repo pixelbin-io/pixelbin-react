@@ -1,6 +1,6 @@
 {
     "name": "@pixelbin/react",
-    "version": "1.2.1",
+    "version": "1.2.0",
     "description": "A React library to integrate PixelBin components in your frontend applications.",
     "private": false,
     "scripts": {

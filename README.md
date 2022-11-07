@@ -61,7 +61,6 @@ An `img` component to display PixelBin's transformed images. You just need to pa
     * `cloudName`: Your PixelBin cloudname. Required.
     * `zone`: A 6 character slug of any of your PixelBin zones.
     * `version`: CDN API version.
-    * `options`: Optional parameters like 'DPR' and 'F_auto' are added in query params.
     * `transformations`: Array of transformations to be applied. Optional. If not provided original will be fetched.
     * `filePath`: Path to the file on Pixelbin storage. Required.
     * `baseUrl`: Domain of your CDN. Defaults to `https://cdn.pixelbin.io/`
@@ -83,7 +82,6 @@ A `button` component to download PixelBin's transformed images. You just need to
     * `cloudName`: Your PixelBin cloudname. Required.
     * `zone`: A 6 character slug of any of your PixelBin zones.
     * `version`: CDN API version.
-    * `options`: Optional parameters like 'DPR' and 'F_auto' are added in query params.
     * `transformations`: Array of transformations to be applied. Optional. If not provided original will be fetched.
     * `filePath`: Path to the file on Pixelbin storage. Required.
     * `baseUrl`: Domain of your CDN. Defaults to `https://cdn.pixelbin.io/`

@@ -13,17 +13,6 @@ afterEach(cleanup);
 
 const url = "https://cdn.pixelbinx0.de/v2/cloudName/t.resize(h:200,w:200)/random.jpeg";
 
-const urlObj = {
-    baseUrl: "https://cdn.pixelbin.io",
-    filePath: "__playground/playground-default.jpeg",
-    version: "v2",
-    zone: "z-slug",
-    cloudName: "red-scene-95b6ea",
-    options: { dpr: 2.5, f_auto: true },
-    transformations: [{}],
-};
-const expectedUrl = "https://cdn.pixelbin.io/v2/red-scene-95b6ea/z-slug/original/__playground/playground-default.jpeg?dpr=2.5&f_auto=true";
-
 describe("PixelBin Image", () => {
 
     beforeEach(() => {
@@ -47,16 +36,6 @@ describe("PixelBin Image", () => {
 
         expect(await screen.findByTestId("pixelbin-download-button")).toBeInTheDocument();
         expect(screen.getByText(/Download/)).toBeInTheDocument();
-    });
-
-    it("urlObj should match expectedUrl", async () => {
-        render(<PixelBinDownloadButton urlObj={urlObj}>Download</PixelBinDownloadButton>);
-
-        const buttonElement = screen.getByTestId("pixelbin-download-button");
-        expect(buttonElement).toBeInTheDocument();
-        expect(screen.getByText(/Download/)).toBeInTheDocument();
-        userEvent.click(screen.getByText(/Download/));
-        await waitFor(() => expect(screen.getByTestId("pixelbin-download-button").getAttribute("data-url")).toBe(expectedUrl));
     });
 
     it("should call onDownloadStart when download starts", async () => {

@@ -52,18 +52,12 @@ const urlObj = {
     filePath: "__playground/playground-default.jpeg",
 };
 
-const _testObjectURLResponse = "https://cdn.pixelbin.io/v2/dummy-cloudname/original/erasebg_assets/logo/Erasebg_light_2x.png?f_auto=true"
-
 describe("PixelBin Image", () => {
+    beforeAll(() => {
+        window.URL.createObjectURL = jest.fn();
+    });
 
     beforeEach(() => {
-        window.URL.createObjectURL = jest.fn(() =>  {
-            // jsdom doesnt have implementation of createObjectURL and revokeObjectURL
-            // just returning a valid imageURL just to check if a valid src is being set to the <img /> being tested
-            return _testObjectURLResponse;
-        });
-        window.URL.revokeObjectURL = jest.fn();
-
         axios.get.mockResolvedValue({
             data: new Blob([fs.readFileSync(path.join(__dirname, "../fixtures/sample-jpeg.jpeg"))])
         });
@@ -79,51 +73,13 @@ describe("PixelBin Image", () => {
         jest.clearAllMocks();
     });
 
-    it("should first render the loading component and then the image if LoaderComponent is defined", async () => {
-        const response = {
-          data: new Blob([
-            fs.readFileSync(path.join(__dirname, "../fixtures/sample-jpeg.jpeg")),
-          ]),
-        };
-  
-        jest.useFakeTimers();
-  
-        axios.get.mockImplementation(
-          async () =>
-            new Promise((resolve) => setTimeout(() => resolve(response), 5000))
-        );
-  
-        render(
-          <PixelBinImage
-            url={url}
-            LoaderComponent={() => <div data-testid="loading-component"></div>}
-          />
-        );
-  
-        expect(screen.getByTestId("loading-component")).toBeInTheDocument();
-        expect(screen.queryByTestId("pixelbin-image")).toBeNull();
-  
-        jest.advanceTimersByTime(6000);
-
-        await waitFor(async () => {
-          const imageElement = await screen.getByTestId("pixelbin-image");
-          expect(imageElement).toBeInTheDocument();
-          expect(imageElement.src).toEqual(_testObjectURLResponse);
-          expect(
-            screen.queryByTestId("loading-component")
-          ).not.toBeInTheDocument();
-        });
-  
-        jest.useRealTimers();
-      });
-
     it("should render", async () => {
         const onErrorMock = jest.fn();
         render(<PixelBinImage url={url} onError={onErrorMock}/>);
 
         const imgElement = await screen.findByTestId("pixelbin-image");
         expect(imgElement).toBeInTheDocument();
-        expect(imgElement.src).toEqual(_testObjectURLResponse);
+        expect(imgElement.src).toBeDefined();
         await waitFor(() => expect(onErrorMock).not.toHaveBeenCalled());
     });
 
@@ -132,7 +88,7 @@ describe("PixelBin Image", () => {
 
         const imgElement = await screen.findByTestId("pixelbin-image");
         expect(imgElement).toBeInTheDocument();
-        expect(imgElement.src).toEqual(_testObjectURLResponse);
+        expect(imgElement.src).toBeDefined();
     });
 
     it("should render with both url & urlObj", async () => {
@@ -140,7 +96,7 @@ describe("PixelBin Image", () => {
 
         const imgElement = await screen.findByTestId("pixelbin-image");
         expect(imgElement).toBeInTheDocument();
-        expect(imgElement.src).toEqual(_testObjectURLResponse);
+        expect(imgElement.src).toBeDefined();
     });
 
     it("should invoke onError when `url` and `urlObj` are undefined", async () => {

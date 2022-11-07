@@ -60,8 +60,10 @@ function fetchImageWithRetry(url, cancelToken, retryOpts) {
       });
       return response;
     } catch (err) {
+      var _err$response;
+
       // This will trigger a retry
-      if (err.response?.status === 202) {
+      if (((_err$response = err.response) === null || _err$response === void 0 ? void 0 : _err$response.status) === 202) {
         return Promise.reject(err);
       } // This would exit without any retries
 
@@ -88,7 +90,6 @@ const PixelBinImage = ({
   const imgRef = React.useRef();
   const [isLoading, setIsLoading] = React.useState(true);
   const [isSuccess, setIsSuccess] = React.useState();
-  const [blobUrl, setBlobUrl] = React.useState();
   React.useEffect(() => {
     // Neither `url` nor `urlObj` was provided
     if (!(url || urlObj)) return onError(new PDKIllegalArgumentError("Please provide either `url` or `urlObj` prop"));
@@ -121,13 +122,14 @@ const PixelBinImage = ({
       ...retryOpts
     }).then(result => {
       if (unmounted) return;
-      let src = URL.createObjectURL(result.data);
-      setBlobUrl(src);
       setIsSuccess(true);
+      imgRef.current.src = URL.createObjectURL(result.data);
     }).catch(err => {
+      var _err$response2;
+
       if (unmounted) return;
 
-      if (err.response?.status !== 202) {
+      if (((_err$response2 = err.response) === null || _err$response2 === void 0 ? void 0 : _err$response2.status) !== 202) {
         return onError(err);
       }
 
@@ -139,12 +141,7 @@ const PixelBinImage = ({
 
       if (imgRef.current) URL.revokeObjectURL(imgRef.current.src);
     };
-  }, [url, urlObj]);
-  React.useEffect(() => {
-    if (blobUrl && imgRef.current) {
-      imgRef.current.src = blobUrl;
-    }
-  }, [imgRef.current, blobUrl]); // for SSR
+  }, [url, urlObj]); // for SSR
 
   if (typeof window === "undefined") {
     return /*#__PURE__*/React__default["default"].createElement("img", _extends({
@@ -156,14 +153,23 @@ const PixelBinImage = ({
     }, imgProps));
   }
 
-  return /*#__PURE__*/React__default["default"].createElement(React__default["default"].Fragment, null, isLoading && LoaderComponent && /*#__PURE__*/React__default["default"].createElement(LoaderComponent, null), isSuccess && /*#__PURE__*/React__default["default"].createElement("img", _extends({
-    "data-testid": "pixelbin-image",
-    ref: imgRef,
-    onLoad: onLoad,
-    onError: onError
-  }, imgProps)), !isLoading && !isSuccess && /*#__PURE__*/React__default["default"].createElement("img", _extends({
-    "data-testid": "pixelbin-empty-image"
-  }, imgProps)));
+  if (isLoading && LoaderComponent) {
+    return /*#__PURE__*/React__default["default"].createElement(LoaderComponent, null);
+  } else if (isSuccess) {
+    return /*#__PURE__*/React__default["default"].createElement("img", _extends({
+      "data-testid": "pixelbin-image",
+      ref: imgRef,
+      onLoad: onLoad,
+      onError: onError
+    }, imgProps));
+  } else {
+    /**
+     * If there were any errors in fetching the image, or the retries exhausted
+     */
+    return /*#__PURE__*/React__default["default"].createElement("img", _extends({
+      "data-testid": "pixelbin-empty-image"
+    }, imgProps));
+  }
 };
 
 const DEFAULT_RETRY_OPTS = {
@@ -184,8 +190,10 @@ const pollTransformedImage = (url, cancelToken, retryOpts) => {
       });
       return response;
     } catch (err) {
+      var _err$response;
+
       // This will trigger a retry
-      if (err.response?.status === 202) {
+      if (((_err$response = err.response) === null || _err$response === void 0 ? void 0 : _err$response.status) === 202) {
         return Promise.reject(err.response);
       } // Any other errors won't be retried
 
@@ -243,10 +251,12 @@ function PixelBinDownloadButton({
       link.download = "pixelbin-transformed";
       link.click();
     }).catch(err => {
+      var _err$response2;
+
       if (isUnmounted) return;
       console.log(err);
 
-      if (err.response?.status !== 202) {
+      if (((_err$response2 = err.response) === null || _err$response2 === void 0 ? void 0 : _err$response2.status) !== 202) {
         return onError(err);
       }
 

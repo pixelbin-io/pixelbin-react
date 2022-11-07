@@ -18,5 +18,5 @@ export function PixelBinImage({ url, urlObj, onLoad, onError, onExhausted, retry
     onExhausted?: () => void;
     retryOpts?: {};
     LoaderComponent: any;
-}): React.DetailedReactHTMLElement<any, HTMLElement> | React.FunctionComponentElement<null>;
+}): React.DetailedReactHTMLElement<any, HTMLElement> | React.CElement<null, React.Component<null, any, any>>;
 import React from "react";
