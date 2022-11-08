@@ -54,6 +54,8 @@ const PixelBinImage = ({
     const imgRef = useRef();
     const [isLoading, setIsLoading] = useState(true);
     const [isSuccess, setIsSuccess] = useState();
+    const [blobUrl, setBlobUrl] = useState();
+
     useEffect(() => {
         // Neither `url` nor `urlObj` was provided
         if (!(url || urlObj))
@@ -88,8 +90,9 @@ const PixelBinImage = ({
             .then((result) => {
                 if (unmounted) return;
 
+                let src = URL.createObjectURL(result.data);
+                setBlobUrl(src);
                 setIsSuccess(true);
-                imgRef.current.src = URL.createObjectURL(result.data);
             })
             .catch((err) => {
                 if (unmounted) return;
@@ -109,6 +112,14 @@ const PixelBinImage = ({
         };
     }, [url, urlObj]);
 
+
+  useEffect(() => {
+    if (blobUrl && imgRef.current) {
+      imgRef.current.src = blobUrl;
+    }
+  }, [imgRef.current, blobUrl]);
+
+
     // for SSR
     if (typeof window === "undefined") {
         return (
@@ -123,24 +134,24 @@ const PixelBinImage = ({
         );
     }
 
-    if (isLoading && LoaderComponent) {
-        return <LoaderComponent />;
-    } else if (isSuccess) {
-        return (
+    return (
+        <>
+          {isLoading && LoaderComponent && <LoaderComponent />}
+          {isSuccess && (
             <img
-                data-testid="pixelbin-image"
-                ref={imgRef}
-                onLoad={onLoad}
-                onError={onError}
-                {...imgProps}
+              data-testid="pixelbin-image"
+              ref={imgRef}
+              onLoad={onLoad}
+              onError={onError}
+              {...imgProps}
             />
-        );
-    } else {
-        /**
-         * If there were any errors in fetching the image, or the retries exhausted
-         */
-        return <img data-testid="pixelbin-empty-image" {...imgProps} />;
-    }
+          )}
+          {!isLoading && !isSuccess && (
+            <img data-testid="pixelbin-empty-image" {...imgProps} />
+          )}
+        </>
+      );
+      
 };
 
 export default PixelBinImage;

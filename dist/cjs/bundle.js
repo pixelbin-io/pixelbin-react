@@ -90,6 +90,7 @@ const PixelBinImage = ({
   const imgRef = React.useRef();
   const [isLoading, setIsLoading] = React.useState(true);
   const [isSuccess, setIsSuccess] = React.useState();
+  const [blobUrl, setBlobUrl] = React.useState();
   React.useEffect(() => {
     // Neither `url` nor `urlObj` was provided
     if (!(url || urlObj)) return onError(new PDKIllegalArgumentError("Please provide either `url` or `urlObj` prop"));
@@ -122,8 +123,9 @@ const PixelBinImage = ({
       ...retryOpts
     }).then(result => {
       if (unmounted) return;
+      let src = URL.createObjectURL(result.data);
+      setBlobUrl(src);
       setIsSuccess(true);
-      imgRef.current.src = URL.createObjectURL(result.data);
     }).catch(err => {
       var _err$response2;
 
@@ -141,7 +143,12 @@ const PixelBinImage = ({
 
       if (imgRef.current) URL.revokeObjectURL(imgRef.current.src);
     };
-  }, [url, urlObj]); // for SSR
+  }, [url, urlObj]);
+  React.useEffect(() => {
+    if (blobUrl && imgRef.current) {
+      imgRef.current.src = blobUrl;
+    }
+  }, [imgRef.current, blobUrl]); // for SSR
 
   if (typeof window === "undefined") {
     return /*#__PURE__*/React__default["default"].createElement("img", _extends({
@@ -153,23 +160,14 @@ const PixelBinImage = ({
     }, imgProps));
   }
 
-  if (isLoading && LoaderComponent) {
-    return /*#__PURE__*/React__default["default"].createElement(LoaderComponent, null);
-  } else if (isSuccess) {
-    return /*#__PURE__*/React__default["default"].createElement("img", _extends({
-      "data-testid": "pixelbin-image",
-      ref: imgRef,
-      onLoad: onLoad,
-      onError: onError
-    }, imgProps));
-  } else {
-    /**
-     * If there were any errors in fetching the image, or the retries exhausted
-     */
-    return /*#__PURE__*/React__default["default"].createElement("img", _extends({
-      "data-testid": "pixelbin-empty-image"
-    }, imgProps));
-  }
+  return /*#__PURE__*/React__default["default"].createElement(React__default["default"].Fragment, null, isLoading && LoaderComponent && /*#__PURE__*/React__default["default"].createElement(LoaderComponent, null), isSuccess && /*#__PURE__*/React__default["default"].createElement("img", _extends({
+    "data-testid": "pixelbin-image",
+    ref: imgRef,
+    onLoad: onLoad,
+    onError: onError
+  }, imgProps)), !isLoading && !isSuccess && /*#__PURE__*/React__default["default"].createElement("img", _extends({
+    "data-testid": "pixelbin-empty-image"
+  }, imgProps)));
 };
 
 const DEFAULT_RETRY_OPTS = {
@@ -228,6 +226,7 @@ function PixelBinDownloadButton({
 
     try {
       url = urlObj ? PixelBin__default["default"].utils.objToUrl(urlObj) : url;
+      e.target.setAttribute("data-url", url);
     } catch (err) {
       return onError(err);
     }
@@ -241,13 +240,15 @@ function PixelBinDownloadButton({
     let source = axios__default["default"].CancelToken.source();
     setIsUnmounted(false);
     onDownloadStart();
-    pollTransformedImage(`${url}?download=true`, source.token, { ...DEFAULT_RETRY_OPTS,
+    url = new URL(url);
+    url.searchParams.set("download", true);
+    pollTransformedImage(url.toString(), source.token, { ...DEFAULT_RETRY_OPTS,
       ...retryOpts
     }).then(() => {
       if (isUnmounted) return;
       onDownloadFinish();
       const link = document.createElement("a");
-      link.href = `${url}?download=true`;
+      link.href = url.toString();
       link.download = "pixelbin-transformed";
       link.click();
     }).catch(err => {
