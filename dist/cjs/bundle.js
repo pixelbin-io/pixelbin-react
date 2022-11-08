@@ -60,8 +60,10 @@ function fetchImageWithRetry(url, cancelToken, retryOpts) {
       });
       return response;
     } catch (err) {
+      var _err$response;
+
       // This will trigger a retry
-      if (err.response?.status === 202) {
+      if (((_err$response = err.response) === null || _err$response === void 0 ? void 0 : _err$response.status) === 202) {
         return Promise.reject(err);
       } // This would exit without any retries
 
@@ -125,9 +127,11 @@ const PixelBinImage = ({
       setBlobUrl(src);
       setIsSuccess(true);
     }).catch(err => {
+      var _err$response2;
+
       if (unmounted) return;
 
-      if (err.response?.status !== 202) {
+      if (((_err$response2 = err.response) === null || _err$response2 === void 0 ? void 0 : _err$response2.status) !== 202) {
         return onError(err);
       }
 
@@ -184,8 +188,10 @@ const pollTransformedImage = (url, cancelToken, retryOpts) => {
       });
       return response;
     } catch (err) {
+      var _err$response;
+
       // This will trigger a retry
-      if (err.response?.status === 202) {
+      if (((_err$response = err.response) === null || _err$response === void 0 ? void 0 : _err$response.status) === 202) {
         return Promise.reject(err.response);
       } // Any other errors won't be retried
 
@@ -220,6 +226,7 @@ function PixelBinDownloadButton({
 
     try {
       url = urlObj ? PixelBin__default["default"].utils.objToUrl(urlObj) : url;
+      e.target.setAttribute("data-url", url);
     } catch (err) {
       return onError(err);
     }
@@ -233,20 +240,24 @@ function PixelBinDownloadButton({
     let source = axios__default["default"].CancelToken.source();
     setIsUnmounted(false);
     onDownloadStart();
-    pollTransformedImage(`${url}?download=true`, source.token, { ...DEFAULT_RETRY_OPTS,
+    url = new URL(url);
+    url.searchParams.set("download", true);
+    pollTransformedImage(url.toString(), source.token, { ...DEFAULT_RETRY_OPTS,
       ...retryOpts
     }).then(() => {
       if (isUnmounted) return;
       onDownloadFinish();
       const link = document.createElement("a");
-      link.href = `${url}?download=true`;
+      link.href = url.toString();
       link.download = "pixelbin-transformed";
       link.click();
     }).catch(err => {
+      var _err$response2;
+
       if (isUnmounted) return;
       console.log(err);
 
-      if (err.response?.status !== 202) {
+      if (((_err$response2 = err.response) === null || _err$response2 === void 0 ? void 0 : _err$response2.status) !== 202) {
         return onError(err);
       }
 
