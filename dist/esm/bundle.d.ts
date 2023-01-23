@@ -1,4 +1,15 @@
-export function PixelBinDownloadButton({ children, url, urlObj, retryOpts, onDownloadStart, onDownloadFinish, onError, onExhausted, ...restProps }: {
+declare function PixelBinImage({ url, urlObj, onLoad, onError, onExhausted, retryOpts, LoaderComponent, ...imgProps }: {
+    [x: string]: any;
+    url: any;
+    urlObj: any;
+    onLoad?: () => void;
+    onError?: () => void;
+    onExhausted?: () => void;
+    retryOpts?: {};
+    LoaderComponent: any;
+}): JSX.Element;
+
+declare function PixelBinDownloadButton({ children, url, urlObj, retryOpts, onDownloadStart, onDownloadFinish, onError, onExhausted, ...restProps }: {
     [x: string]: any;
     children: any;
     url: any;
@@ -8,15 +19,6 @@ export function PixelBinDownloadButton({ children, url, urlObj, retryOpts, onDow
     onDownloadFinish?: () => void;
     onError?: () => void;
     onExhausted?: () => void;
-}): React.DetailedReactHTMLElement<any, HTMLElement>;
-export function PixelBinImage({ url, urlObj, onLoad, onError, onExhausted, retryOpts, LoaderComponent, ...imgProps }: {
-    [x: string]: any;
-    url: any;
-    urlObj: any;
-    onLoad?: () => void;
-    onError?: () => void;
-    onExhausted?: () => void;
-    retryOpts?: {};
-    LoaderComponent: any;
-}): React.DetailedReactHTMLElement<any, HTMLElement> | React.FunctionComponentElement<null>;
-import React from "react";
+}): JSX.Element;
+
+export { PixelBinDownloadButton, PixelBinImage };
