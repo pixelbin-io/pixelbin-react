@@ -10,13 +10,6 @@ npm install  @pixelbin/react --save
 ```
 
 ### Other Installations:
-Add rule in webpack config:
-```javascript
-{
-    test: /@?(pixelbin\/react|pixelbin\/core).*\.(ts|js)x?$/,
-    loader: "babel-loader",
-}
-```
 Install the below packages and add it as a presets in babel config:
 ```
 npm install --save-dev @babel/preset-react @babel/preset-env
@@ -121,4 +114,13 @@ const App = () => {
 }
 
 export default App;
+```
+
+## Migrating from v1 to v2
+You no longer need to add the following rule to webpack config:
+```javascript
+{
+    test: /@?(pixelbin\/react|pixelbin\/core).*\.(ts|js)x?$/,
+    loader: "babel-loader",
+}
 ```
