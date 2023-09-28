@@ -1,11 +1,15 @@
 {
     "name": "@pixelbin/react",
-    "version": "2.0.0",
+    "version": "2.0.1",
     "description": "A React library to integrate PixelBin components in your frontend applications.",
     "private": false,
     "scripts": {
         "build": "rm -rf dist && mkdir dist && tsc -p tsconfig-esm.json && tsc -p tsconfig-cjs.json && rollup --config --bundleConfigAsCjs",
         "test": "jest --env=jsdom"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/pixelbin-dev/pixelbin-react.git"
     },
     "author": "Pixelbin",
     "license": "ISC",
