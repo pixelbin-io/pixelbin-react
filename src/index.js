@@ -1,1 +1,1 @@
-export { PixelBinDownloadButton, PixelBinImage } from "./components"
+export { PixelBinDownloadButton, PixelBinImage } from "./components";
