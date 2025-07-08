@@ -118,13 +118,13 @@ const App = () => {
   const [downloadFinished, setDownloadFinished] = useState(false);
 
   return (
-    <PixelBinDownloadImage
+    <PixelBinDownloadButton
       url={imgUrl}
       onDownloadStart={() => setDownloadStarted(true)}
       onDownloadFinish={() => setDownloadFinished(true)}
     >
       {downloadStarted ? "Downloading..." : "Download"}
-    </PixelBinDownloadImage>
+    </PixelBinDownloadButton>
   );
 };
 
