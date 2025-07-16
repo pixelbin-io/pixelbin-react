@@ -140,15 +140,17 @@ var PixelBinImage = function PixelBinImage(_ref2) {
       var src = URL.createObjectURL(result.data);
       setBlobUrl(src);
       setIsSuccess(true);
+      setIsLoading(false);
     })["catch"](function (err) {
       var _err$response2;
       if (unmounted) return;
       if (((_err$response2 = err.response) === null || _err$response2 === void 0 ? void 0 : _err$response2.status) !== 202) {
-        return onError(err);
+        onError(err);
+      } else {
+        onExhausted(err);
       }
-      onExhausted(err);
-    })["finally"](function () {
-      return setIsLoading(false);
+      setIsSuccess(false);
+      setIsLoading(false);
     });
     return function () {
       unmounted = true;

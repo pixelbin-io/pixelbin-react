@@ -1,3 +1,5 @@
+import React from 'react';
+
 declare function PixelBinImage({ url, urlObj, onLoad, onError, onExhausted, retryOpts, LoaderComponent, ...imgProps }: {
     [x: string]: any;
     url: any;
@@ -7,7 +9,7 @@ declare function PixelBinImage({ url, urlObj, onLoad, onError, onExhausted, retr
     onExhausted?: () => void;
     retryOpts?: {};
     LoaderComponent: any;
-}): JSX.Element;
+}): React.JSX.Element;
 
 declare function PixelBinDownloadButton({ children, url, urlObj, retryOpts, onDownloadStart, onDownloadFinish, onError, onExhausted, ...restProps }: {
     [x: string]: any;
@@ -19,6 +21,6 @@ declare function PixelBinDownloadButton({ children, url, urlObj, retryOpts, onDo
     onDownloadFinish?: () => void;
     onError?: () => void;
     onExhausted?: () => void;
-}): JSX.Element;
+}): React.JSX.Element;
 
 export { PixelBinDownloadButton, PixelBinImage };

@@ -1,19 +1,19 @@
 {
-    "include": ["./src/components/"],
-    "compilerOptions": {
-        "target": "es6",
-        "module": "ES2020",
-        "allowJs": true,
-        "noEmit": false,
-        "declaration": true,
-        "emitDeclarationOnly": true,
-        "rootDir": "./src",
-        "outDir": "./dist/esm/",
-        "removeComments": true,
-        "skipLibCheck": true,
-        "esModuleInterop": true,
-        "moduleResolution": "node",
-        "allowSyntheticDefaultImports": true,
-        "forceConsistentCasingInFileNames": true
-    }
+  "include": ["./src/components/"],
+  "compilerOptions": {
+    "target": "es6",
+    "module": "ES2020",
+    "allowJs": true,
+    "noEmit": false,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "rootDir": "./src",
+    "outDir": "./dist/esm/",
+    "removeComments": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true
+  }
 }
